@@ -28,7 +28,7 @@ function ThroughDirectory(Directory) {
     });
 }
 
-ThroughDirectory("../sounds");
+ThroughDirectory("../soundfiles");
 
 console.log(Files)
 
