@@ -1,0 +1,53 @@
+<html>
+<body>
+  <h1>stronghold soundpanel</h1>
+  <button id="soundButton">soundButton</button>    
+  <input id="keepCurrent" type="checkbox">keep current
+
+  <script>
+    
+    const soundButton = document.getElementById('soundButton');
+    const keepCurrentSound = document.getElementById('keepCurrent');
+    let currentSound;
+
+    soundButton.addEventListener('click', () => {
+    soundTime();
+    });
+
+    function soundTime(){
+      try{
+        getSoundBase64().then(function(result){
+        if(keepCurrentSound.checked){
+          if(!currentSound){currentSound = result}
+        }else{
+          currentSound = result
+        }
+        let audio1 = new Audio(`data:audio/x-wav;base64, ${currentSound}`);
+        audio1.play();
+        audio1.addEventListener('playing', function(){
+          console.log("audio started playing")
+        });
+        audio1.addEventListener('ended', function(){
+          console.log("audio stopped playing")
+        });
+     });
+      }
+      catch{
+        soundTime();
+      }
+    }
+
+    async function getSoundBase64() {
+  try {
+    const response = await fetch('/function/sound');
+    const text = await response.json();
+    //console.log(text.contents);
+    return text.contents;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+  </script>
+</body>
+</html>
