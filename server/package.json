@@ -1,21 +1,15 @@
 {
-  
-  "name": "coolonlinecheckerwebapp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "strongholdsoundpanel",
+  "version": "1.2.0",
+  "description": "An express application",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "gnabbas",
   "dependencies": {
-    "axios": "^1.4.0",
     "express": "^4.18.2",
     "glob": "^10.3.3",
     "request-ip": "^3.3.0"
-  },
-  "devDependencies": {
-    "@nestjs/cli": "^10.1.11"
   }
 }
