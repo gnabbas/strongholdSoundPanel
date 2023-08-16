@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const {glob} = require("glob")
 const requestIP = require("request-ip")
-
+const SoundFileRepo = require('./soundFileRepo.js').SoundFileRepo;
 const app = express();
 
 //create custom log function to log to console & file
@@ -11,45 +11,41 @@ const app = express();
 var util = require('util');
 var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'a'});
 var log_stdout = process.stdout;
-
 function coolLogger(d) { //
   log_file.write(util.format(d) + '\n');
   log_stdout.write(util.format(d) + '\n');
 };
+//end custom log function
+
+//init soundfile repo
+soundFileRepo = new SoundFileRepo("../soundfiles/")
+soundFileRepo.loadFilePaths()
+soundFileRepo.loadFiles()
 
 
-let Files  = [];
-
-function ThroughDirectory(Directory) {
-    fs.readdirSync(Directory).forEach(File => {
-        const Absolute = path.join(Directory, File);
-        if (fs.statSync(Absolute).isDirectory()) return ThroughDirectory(Absolute);
-        else return Files.push(Absolute);
-    });
-}
-
-ThroughDirectory("../soundfiles");
-
-console.log(Files)
-
-
-
+//express app
 app.use(express.json()); // Parse JSON request bodies
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));
 });
 
-
 app.get('/function/sound', (req, res) => {
 
   const ipAddress = requestIP.getClientIp(req)
   coolLogger("[ + ]  " +ipAddress+"  "+Date())
 
-  var randomItem = Files[Math.floor(Math.random()*Files.length)];
-  const contents = fs.readFileSync(randomItem, {encoding: 'base64'});
-  res.json({contents})
+  res.json(soundFileRepo.files[Math.floor(Math.random()*soundFileRepo.files.length)].base64)
 });
+
+
+
+//stuff to serve all the files  ->> https://stackoverflow.com/questions/5823722/how-to-serve-an-image-using-nodejs
+var dir = path.join(__dirname);
+
+app.use(express.static(dir));
+
+
 
 
 app.listen(3001, () => {

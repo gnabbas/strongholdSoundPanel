@@ -2,3 +2,4 @@ server/node_modules
 server/debug.log
 server/package-lock.json
 soundfiles/*
+server/Enchanted Land.otf
